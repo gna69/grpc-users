@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package api;
+
+option go_package="github.com/gna69/grpc-users/pkg/api";
+
+service User {
+    rpc Add(UserInfo) returns (UserInfo) {}
+    rpc Remove(UserInfo) returns (UserInfo) {}
+    rpc GetAll(Empty) returns (AllUsers) {}
+}
+
+message UserInfo {
+    int32 id = 1;
+    string firstName = 2;
+    string lastName = 3;
+}
+
+message AllUsers {
+    repeated UserInfo users = 1;
+}
+
+message Empty {}
