@@ -52,7 +52,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	go logger.Logger(appConfig.Kafka)
+	go logger.Logger(appConfig.Kafka, appConfig.ClickHouse)
 
 	log.Infof("Server started on %d port", appConfig.Port)
 	if err := grpcServer.Serve(l); err != nil {

@@ -7,9 +7,10 @@ import (
 )
 
 type Config struct {
-	Port     uint
-	Postgres PostgresConfig
-	Kafka    KafkaConfig
+	Port       uint
+	Postgres   PostgresConfig
+	Kafka      KafkaConfig
+	ClickHouse ClickHouseConfig
 }
 
 type PostgresConfig struct {
@@ -21,6 +22,11 @@ type PostgresConfig struct {
 }
 
 type KafkaConfig struct {
+	Host string
+	Port uint
+}
+
+type ClickHouseConfig struct {
 	Host string
 	Port uint
 }
@@ -54,9 +60,12 @@ func readConfig() *Config {
 	envValue, ok = os.LookupEnv("KAFKA_PORT")
 	kafkaPort, err := strconv.ParseInt(envValue, 10, 0)
 
+	envValue, ok = os.LookupEnv("CLICKHOUSE_PORT")
+	clickhousePort, err := strconv.ParseInt(envValue, 10, 0)
+
 	if !ok || err != nil {
-		log.Warn("No kafka port in ENV. Using default 9092")
-		kafkaPort = 9092
+		log.Warn("No clickhouse port in ENV. Using default 8123")
+		clickhousePort = 8123
 	}
 
 	config = &Config{
@@ -71,6 +80,10 @@ func readConfig() *Config {
 		Kafka: KafkaConfig{
 			Host: os.Getenv("KAFKA_HOST"),
 			Port: uint(kafkaPort),
+		},
+		ClickHouse: ClickHouseConfig{
+			Host: os.Getenv("CLICKHOUSE_HOST"),
+			Port: uint(clickhousePort),
 		},
 	}
 

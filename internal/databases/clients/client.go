@@ -6,4 +6,8 @@ type (
 	UsersClient interface {
 		UsersService() repo.UserService
 	}
+
+	LogClient interface {
+		LogService() repo.LogService
+	}
 )
