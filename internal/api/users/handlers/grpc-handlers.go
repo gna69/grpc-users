@@ -2,12 +2,16 @@ package handlers
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/gna69/grpc-users/internal/databases/clients"
 	"github.com/gna69/grpc-users/internal/databases/model"
+	"github.com/segmentio/kafka-go"
+	log "github.com/sirupsen/logrus"
 )
 
 type UserService struct {
 	UsersClient clients.UsersClient
+	KafkaClient *kafka.Writer
 }
 
 func castProtoToLocal(user *UserInfo) *model.User {
@@ -25,12 +29,33 @@ func castLocalToProto(user *model.User) *UserInfo {
 	}
 }
 
+func castUserStructToBytes(user *model.User) ([]byte, error) {
+	buffer, err := json.Marshal(user)
+	if err != nil {
+		return nil, err
+	}
+	return buffer, nil
+}
+
 func (s *UserService) Add(ctx context.Context, user *UserInfo) (*UserInfo, error) {
 	castedUser := castProtoToLocal(user)
 
 	err := s.UsersClient.UsersService().Create(ctx, castedUser)
 	if err != nil {
 		return nil, err
+	}
+
+	bytesUser, err := castUserStructToBytes(castedUser)
+	if err == nil {
+		err = s.KafkaClient.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte("user"),
+			Value: bytesUser,
+		})
+		if err != nil {
+			log.Debug("error sending kafka message: ", err.Error())
+		}
+	} else {
+		log.Debug("error convert struct to []byte: ", err.Error())
 	}
 
 	newUser := castLocalToProto(castedUser)

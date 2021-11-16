@@ -12,18 +12,24 @@ require (
 )
 
 require (
+	github.com/ClickHouse/clickhouse-go v1.5.1 // indirect
 	github.com/armon/go-radix v1.0.0 // indirect
+	github.com/cloudflare/golz4 v0.0.0-20150217214814-ef862a3cdc58 // indirect
 	github.com/elastic/go-licenser v0.3.1 // indirect
 	github.com/elastic/go-sysinfo v1.1.1 // indirect
 	github.com/elastic/go-windows v1.0.0 // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
+	github.com/golang/snappy v0.0.1 // indirect
 	github.com/jcchavezs/porto v0.1.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/joeshaw/multierror v0.0.0-20140124173710-69b34d4ec901 // indirect
+	github.com/klauspost/compress v1.9.8 // indirect
 	github.com/lib/pq v1.3.0 // indirect
+	github.com/pierrec/lz4 v2.6.0+incompatible // indirect
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/prometheus/procfs v0.0.0-20190425082905-87a4384529e0 // indirect
 	github.com/santhosh-tekuri/jsonschema v1.2.4 // indirect
+	github.com/segmentio/kafka-go v0.4.23 // indirect
 	go.elastic.co/apm v1.14.0 // indirect
 	go.elastic.co/apm/module/apmsql v1.14.0 // indirect
 	go.elastic.co/fastjson v1.1.0 // indirect

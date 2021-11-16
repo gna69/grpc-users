@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gna69/grpc-users/config"
 	"github.com/gna69/grpc-users/internal/api/users/handlers"
+	"github.com/gna69/grpc-users/internal/logger"
 	"github.com/gna69/grpc-users/internal/server"
 	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
@@ -36,15 +37,22 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer func() {
+		err := srv.KafkaClient.Close()
+		if err != nil {
+			log.Error("error close kafka conn: ", err.Error())
+		}
+	}()
 
 	grpcServer := grpc.NewServer()
-
 	handlers.RegisterUserServer(grpcServer, srv)
 
 	l, err := net.Listen("tcp", fmt.Sprintf(":%d", appConfig.Port))
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	go logger.Logger(appConfig.Kafka)
 
 	log.Infof("Server started on %d port", appConfig.Port)
 	if err := grpcServer.Serve(l); err != nil {

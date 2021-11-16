@@ -9,6 +9,7 @@ import (
 type Config struct {
 	Port     uint
 	Postgres PostgresConfig
+	Kafka    KafkaConfig
 }
 
 type PostgresConfig struct {
@@ -17,6 +18,11 @@ type PostgresConfig struct {
 	Database string
 	User     string
 	Password string
+}
+
+type KafkaConfig struct {
+	Host string
+	Port uint
 }
 
 var config *Config
@@ -45,6 +51,14 @@ func readConfig() *Config {
 		pgPort = 5432
 	}
 
+	envValue, ok = os.LookupEnv("KAFKA_PORT")
+	kafkaPort, err := strconv.ParseInt(envValue, 10, 0)
+
+	if !ok || err != nil {
+		log.Warn("No kafka port in ENV. Using default 9092")
+		kafkaPort = 9092
+	}
+
 	config = &Config{
 		Port: uint(appPort),
 		Postgres: PostgresConfig{
@@ -53,6 +67,10 @@ func readConfig() *Config {
 			Database: os.Getenv("PG_DB"),
 			User:     os.Getenv("PG_USER"),
 			Password: os.Getenv("PG_PASS"),
+		},
+		Kafka: KafkaConfig{
+			Host: os.Getenv("KAFKA_HOST"),
+			Port: uint(kafkaPort),
 		},
 	}
 
