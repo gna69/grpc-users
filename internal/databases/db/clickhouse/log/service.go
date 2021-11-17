@@ -3,14 +3,14 @@ package log
 import (
 	"github.com/gna69/grpc-users/internal/databases/repo"
 	"github.com/jmoiron/sqlx"
+	log "github.com/sirupsen/logrus"
 )
 
 type service struct {
 	db *sqlx.DB
 }
 
-var schema = `create table  if not exist logs (
-    							id UInt32,
+var schema = `create table  if not exists logs (
                                 first_name String,
                                 last_name String,
                                 user_id UInt32,
@@ -29,6 +29,12 @@ func New(dbConn *sqlx.DB) (repo.LogService, error) {
 }
 
 func (s *service) CreateLogsTableIfNotExist() error {
+	defer func() {
+		if err := recover(); err != nil {
+			log.Debug(err)
+		}
+	}()
+
 	s.db.MustExec(schema)
 
 	return nil

@@ -1,0 +1,8 @@
+version: '2'
+services:
+  clickhouse:
+    container_name: 'clickhouse'
+    image: yandex/clickhouse-server:latest
+    ports:
+      - "8123:8123"
+      - "9000:9000"

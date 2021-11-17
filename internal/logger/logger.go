@@ -55,16 +55,12 @@ func Logger(kafkaConfig config.KafkaConfig, clickHouse config.ClickHouseConfig) 
 			continue
 		}
 
-		currentTime := time.Now()
-		actionDate, _ := time.Parse(currentTime.Format("01-02-2006"), "01-02-2006")
-		actionTime, _ := time.Parse(currentTime.Format("15:04:05"), "15:04:05")
-
 		logRecord := &model.LogRecord{
 			FirstName:  user.FirstName,
 			LastName:   user.LastName,
 			UserId:     uint32(user.Id),
-			ActionDate: actionDate,
-			ActionTime: actionTime,
+			ActionDate: time.Now(),
+			ActionTime: time.Now(),
 		}
 
 		err = chClient.LogService().Create(logRecord)
