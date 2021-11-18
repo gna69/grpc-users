@@ -16,7 +16,7 @@ func (s *service) Create(ctx context.Context, user *model.User) error {
 
 func (s *service) Delete(ctx context.Context, user *model.User) (*model.User, error) {
 	db := apmgorm.WithContext(ctx, s.db)
-	if err := db.Where(&model.User{Id: user.Id}).Delete(&model.User{}).Error; err != nil {
+	if err := db.Where("id = ?", user.Id).Delete(&model.User{}).Error; err != nil {
 		return nil, err
 	}
 	return user, nil
