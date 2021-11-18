@@ -62,10 +62,10 @@ func Logger(kafkaConfig config.KafkaConfig, clickHouse config.ClickHouseConfig) 
 			ActionDate: time.Now(),
 			ActionTime: time.Now(),
 		}
-
+		log.Info("Stating log in click")
 		err = chClient.LogService().Create(logRecord)
 		if err != nil {
-			log.Debug("error writing log to clickhouse: ", err.Error())
+			log.Info("error writing log to clickhouse: ", err.Error())
 		}
 
 		fmt.Println(m.Offset, string(m.Key), string(m.Value))

@@ -69,7 +69,7 @@ func (s *UserService) Add(ctx context.Context, user *UserInfo) (*UserInfo, error
 			Value: bytesUser,
 		})
 		if err != nil {
-			log.Debug("error sending kafka message: ", err.Error())
+			log.Info("error sending kafka message: ", err.Error())
 		}
 	} else {
 		log.Debug("error convert struct to []byte: ", err.Error())
